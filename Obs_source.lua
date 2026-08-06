@@ -215,6 +215,7 @@ local Templates = {
         DisabledValues = {},
         Multi = false,
         MaxVisibleDropdownItems = 8,
+        FullView = false,
 
         Callback = function() end,
         Changed = function() end,
@@ -457,7 +458,7 @@ local FetchIcons, Icons = pcall(function()
     )()
 end)
 function Library:GetIcon(IconName: string)
-    if not FetchIcons then
+    if not FetchIcons or typeof(Icons) ~= "table" then
         return
     end
     local Success, Icon = pcall(Icons.GetAsset, IconName)
@@ -3394,14 +3395,24 @@ do
         })
 
         function Dropdown:RecalculateListSize(Count)
+            local ItemCount = Count or GetTableSize(Dropdown.Values)
+
+            -- FullView: größeres Popup mit (fast) allen Werten für bessere Übersicht
+            local MaxItems = Info.FullView and 30 or Info.MaxVisibleDropdownItems
             local Y = math.clamp(
-                (Count or GetTableSize(Dropdown.Values)) * (21 * Library.DPIScale),
+                ItemCount * (21 * Library.DPIScale),
                 0,
-                Info.MaxVisibleDropdownItems * (21 * Library.DPIScale)
+                MaxItems * (21 * Library.DPIScale)
             )
 
+            local Width = Display.AbsoluteSize.X
+            if Info.FullView then
+                local Viewport = workspace.CurrentCamera.ViewportSize
+                Width = math.min(Display.AbsoluteSize.X * 1.5, Viewport.X - 64)
+            end
+
             MenuTable:SetSize(function()
-                return UDim2.fromOffset(Display.AbsoluteSize.X, Y)
+                return UDim2.fromOffset(Width, Y)
             end)
         end
 
