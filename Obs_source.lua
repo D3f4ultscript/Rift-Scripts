@@ -4026,8 +4026,8 @@ function Library:CreateWindow(WindowInfo)
                     Size = UDim2.new(1, 0, 0, 1),
                 },
                 {
-                    Position = UDim2.fromScale(0.3, 0),
-                    Size = UDim2.new(0, 1, 1, -21),
+                    Position = UDim2.fromOffset(0, 90),
+                    Size = UDim2.new(1, 0, 0, 1),
                 },
                 {
                     AnchorPoint = Vector2.new(0, 1),
@@ -4209,28 +4209,32 @@ function Library:CreateWindow(WindowInfo)
 
         --// Tabs \\--
         Tabs = New("ScrollingFrame", {
-            AutomaticCanvasSize = Enum.AutomaticSize.Y,
+            AutomaticCanvasSize = Enum.AutomaticSize.X,
             BackgroundColor3 = "BackgroundColor",
             CanvasSize = UDim2.fromScale(0, 0),
             Position = UDim2.fromOffset(0, 49),
             ScrollBarThickness = 0,
-            Size = UDim2.new(0.3, 0, 1, -70),
+            Size = UDim2.new(1, 0, 0, 40),
             Parent = MainFrame,
         })
 
         New("UIListLayout", {
+            FillDirection = Enum.FillDirection.Horizontal,
+            HorizontalAlignment = Enum.HorizontalAlignment.Left,
+            VerticalAlignment = Enum.VerticalAlignment.Center,
+            Padding = UDim.new(0, 4),
             Parent = Tabs,
         })
 
         --// Container \\--
         Container = New("Frame", {
-            AnchorPoint = Vector2.new(1, 0),
+            AnchorPoint = Vector2.new(0, 0),
             BackgroundColor3 = function()
                 return Library:GetBetterColor(Library.Scheme.BackgroundColor, 1)
             end,
             Name = "Container",
-            Position = UDim2.new(1, 0, 0, 49),
-            Size = UDim2.new(0.7, -1, 1, -70),
+            Position = UDim2.fromOffset(0, 90),
+            Size = UDim2.new(1, 0, 1, -110),
             Parent = MainFrame,
         })
 
@@ -4262,30 +4266,36 @@ function Library:CreateWindow(WindowInfo)
 
         Icon = Library:GetIcon(Icon)
         do
+            local TX, _ = Library:GetTextBounds(Name, Library.Scheme.Font, 15)
+            local IconWidth = 0
+
             TabButton = New("TextButton", {
                 BackgroundColor3 = "MainColor",
                 BackgroundTransparency = 1,
-                Size = UDim2.new(1, 0, 0, 40),
+                Size = UDim2.new(0, 0, 0, 40),
                 Text = "",
                 Parent = Tabs,
             })
 
             New("UIPadding", {
-                PaddingBottom = UDim.new(0, 11),
-                PaddingLeft = UDim.new(0, 12),
-                PaddingRight = UDim.new(0, 12),
-                PaddingTop = UDim.new(0, 11),
+                PaddingLeft = UDim.new(0, 10),
+                PaddingRight = UDim.new(0, 10),
+                Parent = TabButton,
+            })
+            New("UIListLayout", {
+                FillDirection = Enum.FillDirection.Horizontal,
+                HorizontalAlignment = Enum.HorizontalAlignment.Center,
+                VerticalAlignment = Enum.VerticalAlignment.Center,
+                Padding = UDim.new(0, 6),
                 Parent = TabButton,
             })
 
             TabLabel = New("TextLabel", {
                 BackgroundTransparency = 1,
-                Position = UDim2.fromOffset(30, 0),
-                Size = UDim2.new(1, -30, 1, 0),
+                Size = UDim2.new(0, math.floor(TX), 1, 0),
                 Text = Name,
-                TextSize = 16,
+                TextSize = 15,
                 TextTransparency = 0.5,
-                TextXAlignment = Enum.TextXAlignment.Left,
                 Parent = TabButton,
             })
 
@@ -4296,11 +4306,18 @@ function Library:CreateWindow(WindowInfo)
                     ImageRectOffset = Icon.ImageRectOffset,
                     ImageRectSize = Icon.ImageRectSize,
                     ImageTransparency = 0.5,
-                    Size = UDim2.fromScale(1, 1),
-                    SizeConstraint = Enum.SizeConstraint.RelativeYY,
+                    Size = UDim2.fromOffset(18, 18),
                     Parent = TabButton,
                 })
+                IconWidth = 24
             end
+
+            TabButton.Size = UDim2.fromOffset(math.floor(TX + IconWidth + 20), 40)
+            Library:UpdateDPI(TabButton, {
+                Size = UDim2.fromOffset(math.floor(TX + IconWidth + 20), 40),
+            })
+        end
+
 
             --// Tab Container \\--
             TabContainer = New("Frame", {
@@ -4817,29 +4834,34 @@ function Library:CreateWindow(WindowInfo)
         local TabContainer
 
         do
+            local TX, _ = Library:GetTextBounds(Name, Library.Scheme.Font, 15)
+
             TabButton = New("TextButton", {
                 BackgroundColor3 = "MainColor",
                 BackgroundTransparency = 1,
-                Size = UDim2.new(1, 0, 0, 40),
+                Size = UDim2.new(0, 0, 0, 40),
                 Text = "",
                 Parent = Tabs,
             })
             New("UIPadding", {
-                PaddingBottom = UDim.new(0, 11),
-                PaddingLeft = UDim.new(0, 12),
-                PaddingRight = UDim.new(0, 12),
-                PaddingTop = UDim.new(0, 11),
+                PaddingLeft = UDim.new(0, 10),
+                PaddingRight = UDim.new(0, 10),
+                Parent = TabButton,
+            })
+            New("UIListLayout", {
+                FillDirection = Enum.FillDirection.Horizontal,
+                HorizontalAlignment = Enum.HorizontalAlignment.Center,
+                VerticalAlignment = Enum.VerticalAlignment.Center,
+                Padding = UDim.new(0, 6),
                 Parent = TabButton,
             })
 
             TabLabel = New("TextLabel", {
                 BackgroundTransparency = 1,
-                Position = UDim2.fromOffset(30, 0),
-                Size = UDim2.new(1, -30, 1, 0),
+                Size = UDim2.new(0, math.floor(TX), 1, 0),
                 Text = Name,
-                TextSize = 16,
+                TextSize = 15,
                 TextTransparency = 0.5,
-                TextXAlignment = Enum.TextXAlignment.Left,
                 Parent = TabButton,
             })
 
@@ -4850,11 +4872,17 @@ function Library:CreateWindow(WindowInfo)
                     ImageRectOffset = KeyIcon.ImageRectOffset,
                     ImageRectSize = KeyIcon.ImageRectSize,
                     ImageTransparency = 0.5,
-                    Size = UDim2.fromScale(1, 1),
-                    SizeConstraint = Enum.SizeConstraint.RelativeYY,
+                    Size = UDim2.fromOffset(18, 18),
                     Parent = TabButton,
                 })
             end
+
+            TabButton.Size = UDim2.fromOffset(math.floor(TX + (KeyIcon and 24 or 0) + 20), 40)
+            Library:UpdateDPI(TabButton, {
+                Size = UDim2.fromOffset(math.floor(TX + (KeyIcon and 24 or 0) + 20), 40),
+            })
+        end
+
 
             --// Tab Container \\--
             TabContainer = New("ScrollingFrame", {
